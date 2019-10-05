@@ -451,13 +451,18 @@ do
             function(fl, lump_data)
                 lump_data.data = {}
                 lump_data.size = lump_data.filelen / 16
+                local origin = Vector(fl:ReadLong(), fl:ReadLong(), fl:ReadLong())
+                local size = fl:ReadLong()
+
+                if size < 1 then size = 6 end -- default size should be 32x32
+
                 for i=0, lump_data.size - 1 do
                     lump_data.data[i] = {
-                        origin = Vector(fl:ReadLong(), fl:ReadLong(), fl:ReadLong()),
-						size = 2^(fl:ReadLong()-1)
-					}
+                        origin = origin,
+                        size = 2^(size-1)
+                    }
                 end
-			end,
+            end,
         [LUMP_TEXDATA_STRING_DATA] = -- Texture name data
             function(fl, lump_data)
                 lump_data.data = {}
